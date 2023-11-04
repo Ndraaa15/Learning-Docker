@@ -1,0 +1,122 @@
+Dockerfile is a text that included all commands, which are needed to build a docker image. 
+It is a text file that contains all the commands a user could call on the command line to assemble an image. 
+Using docker build users can create an automated build that executes several command-line instructions in succession.
+
+--DOCKER BUILD >> create an image from a Dockerfile
+example:
+docker build -t myimage:1.0 [folder-dockerfile] >> -t is name/tag
+docker build -t cupcakez/myimage:1.0 [folder-dockerfile] >> -t is name/tag
+
+. >> current directory
+
+#comment >> comment
+INSTRUCTION [arguments] >> INSTRUCTION is a command, arguments is a parameter for command
+INSTRUCTION is a case insensitive so we can create UPPERCASE of lowercase but the best practice is UPPERCASE
+
+--FROM INSTRUCTION
+FROM [image]:[tag] >> FROM is a command to define base image or create a build stage for the image that we choose
+
+--RUN INSTRUCTION
+RUN [command] >> RUN is a command to execute command in a new layer on top of the current image and commit the results
+  o>> execute command in the image when the build stage process in running. The result of run command will be commited to the changed image.
+  o>> run instructions will be only executed when the image is built, and not when the container is started.
+
+RUN [commands]
+RUN ['executable', 'argument', '...']
+
+by default, docker cant display the detail text when its build.
+to display the detail text, we can use --progress=plain
+otherwise, docker also using cache to build the image. If we want to rebuilt the image without cache use --no-cache
+
+--CMD INSTRUCTION
+CMD [command] >> CMD is a command to provide default command for the container when it is created
+  o>> CMD will be executed when the container is started not when the image is built
+  o>> CMD can be override by command line argument when the container is started
+  o>> CMD can be override by docker-compose.yml file when the container is started
+  o>> the CMD cant be more than one because it will be executed in the same time it makes only the last CMD will be executed
+
+CMD [command param param]
+CMD ["executable", "param", "param"]
+CMD ["param", "param"] >> using executable ENTRY POINT
+
+
+--LABEL INSTRUCTION
+LABEL >> instruction used for insert metadata inside to docker image that we create
+Metadata including addition information like the name of the image, version of the image, description of the image, and so on.
+Metadata is only for information and it will not affect the image or container.
+
+LABEL [key]=[value] [key]=[value] [key]=[value] ...
+LABEL [key]=[value]
+
+--ADD INSTRUCTION
+ADD instruction >> this instruction is for adding file from source through the folder destination in Docker image
+also add instruction can detect if file from source is a compressed file, then it will be extracted automatically in folder destination in Docker image
+add instruction support inserting batch file using match file pattern in golang
+
+ADD [source] [destination]
+the source can be an URL, compressed file, or match file pattern in golang
+
+--COPY INSTRUCTION
+COPY instruction >> this instruction is for copying file from source through the folder destination in Docker image
+inserting file from source into destination folder in Docker image
+
+this copy instruction only can COPY file not extracting and anything else like ADD instruction
+best practice is using copy
+
+COPY [source] [destination]
+
+
+--DOCKER IGNORE FILE
+.dockerignore >> this file is used for ignoring file or folder when we build the image
+when use ADD and COPY instruction from the file source, first docker will check the file in .dockerignore file
+if the file is exist in .dockerignore file, then the file will be ignored and not inserted into the Docker image
+file .dockerignore is same like .gitignore file (ignore folder or regular expression)
+
+--EXPOSE INSTRUCTION
+EXPOSE [port] >> this instruction is for exposing port from Docker container to the host
+(to inform about the container will be listen port at spesific number and protocol)
+
+this instruction is only for information and not for security. So, we still need to use -p or -P when we run the container
+this instruction will not publish any port from container to host. Just for information because this docker image use any port when it become docker container
+
+EXPOSE [port] #default is TCP
+EXPOSE [port/tcp]
+EXPOSE [port/udp]
+
+
+--ENVIRONMENT VARIABLE INTRUCTION 
+environment variable >> this instruction is for setting environment variable in Docker image
+this instruction is used to change the environment when it in build stage or maybe when running inside container.
+the env that already define in Dockerfile can be use again with ${NAMA_ENV}
+when we want to change the env when we gonna start container use --env or -e
+
+ENV [key]=[value]
+ENV [key]=[value] [key]=[value] [key]=[value] ...
+
+
+--VOLUME INSTRUCTION
+this instruction is for creating volume automatically when we create the container.
+all file inside the volume automatically copied into docker volume, although we dont create docker volume when we create the container.
+
+VOLUME [/path/to/mount]
+VOLUME ["/path/to/mount1"] ["/path/to/mount2"] ["/path/to/mount3"] ...
+VOLUME ["/path/to/mount1", "/path/to/mount2", "/path/to/mount3", ...]
+
+
+--WORKDIR INSTRUCTION
+this instruction is for choose working directory to use other instruction like RUN, CMD, ENTRYPOINT, COPY, ADD, and so on (move to the choosen workdir)
+if the workdir doesnt exist, automatically docker will create the directory and then after we choose the workdir, all instruction will be executed in the workdir
+if the workdir was a relative path, so automatically it will be going inside the before directory
+workdir also can be used for the first location when we going inside container
+
+WORKDIR /[dir1] its mean the working directory is /dir1
+WORKDIR [dir2] its mean the working directory is /dir1/dir2
+WORKDIR /[dir3]/[dir4] its mean the working directory is /dir3/dir4
+
+--USER INSTRUCTION
+this instruction for change user or user group when docker image running
+by default, docker image using user root, but at some case, maybe an application need to use another user or user group
+so we can change the user by USER instruction
+
+USER [user] >> change user
+USER [user]:[group] >> change user and group

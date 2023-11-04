@@ -1,0 +1,123 @@
+--DOCKER IMAGE >> its like installer (wrap application and depedency needed)
+
+docker pull [image]:[tag] >> get an image
+
+docker image rm [image]:[tag] >> delete an image
+docker rmi [image]:[tag] >> delete an image
+
+docker image ls -a >> see list of image
+docker image ls >> 
+
+--DOCKER CONTAINER
+
+docker container ls -a >> see list of active and non active container
+docker container create -name [container_name] [image]:[tag] >> create container
+docker container start [container_name]/[container_id] >> start container that already existing
+docker container stop [container_name]/[container_id] >> stop container
+docker container rm [container_name]/[container_id]  >> delete container
+docker container rm -f [container_name]/[container_id]  >> delete container while running
+docker container run -p 3306:3306 --detach --name mysql mysql:latest
+docker container run -it -p 3306:3306 --detach --name mysql mysql:latest bash >> going inside container
+
+--DOCKER CONTAINER LOGS
+
+docker container logs [container_name]/[container_id] >> see the list of logs container
+docker container logs -f [container_name]/[container_id] >> get new logs from the container
+
+--DOCKER CONTAINER EXEC
+(while this container is exist)
+docker container exec -i -t [container_name]/[container_id] /bin/bash >> got inside the container and execute bash script program (the container still running).
+
+command above is exexute the /bin/bash program inside the container and then we can send anything to that bash.
+
+
+--DOCKER CONTAINER PORT
+docker container create --name [image_name] --publish [port_host]:[port_container] [image]:[tag]
+
+--DOCKER CONTAINER ENVIRONMENT VARIABLE
+docker container create --name [image_name] --publish [port_host]:[port_container] --env [key]=[value] [image]:[tag]
+
+--DOCKER CONTAINER STASTS
+docker container stats >> see the stats about the resource that use by container
+
+--DOCKER CONTAINER RESOURCE LIMITATION
+docker container create --name [container_name] --publish [port_host]:[port_container] --env 
+[key]=[value] [image]:[tag] --memory [total_limit] --cpus [cpu_core] >> set the limitation of memory and cpu core that can be used by container
+
+--DOCKER MOUNTS >> ability to mounting or sharing file or folder from local to container or from container to local.
+
+'--mount'
+
+type mount >> bind and volume
+
+docker create --name [container_name] --mount "type=bind,source=folder_host,destination=folder_container,readonly" [image]:[tag]
+
+--DOCKER VOLUME >> its like docker mounts but we can manage the volume that we create.
+in bind mount the data is store in local but in volume data manage by docker.
+by default when we create container its also create volume to store data.
+
+docker volume ls >> see the list volume
+
+docker volume create [volume_name] >> create the new volume
+
+docker volume rm [volume_name] >> delete volume exist
+
+docker container create --name [container_name] --mount "type=volume,source=[volume_name],destination=[container_folder] [image]:[tag]
+
+--DOCKER VOLUME BACK UP >> there is no automatic way to back up the volume but we can do it manually
+
+1 shut down the container first
+2 create a new container with to mount mount bind to local folder and mount volume from the volume that we want to back up
+3 then archive the volume then send it to mount bind
+4 archive file already in local
+5 delete container to for back up
+
+how to archive data
+
+tar cvf /[directory]/[filename].tar.gz /data
+
+docker container run --rm >> after container is finished used it will be automativally removed
+
+docker container run --rm --name [container_name] 
+--mount "type=bind,source=[path_name],destination=[container_folder] 
+--mount "type=volume,source=[volume_name],destination=[container_folder] [image]:[tag] tar cvf /[directory]/[filename].tar.gz /[folder/to/archive]
+
+--DOCKER VOLUME RESTORE
+
+1 create new volume to restore data
+2 create new container and use 2 mounts
+3 restore data using the container with extracting back up file into the volume
+4 the backup data is restore to volume
+5 then start again the container
+
+docker container run --rm --name [container_name] --mount "type=bind,source=[local_folder],destination=[container_folder]" "type=volume,source=[volume],destination=[container_folder]" [image]:[tag] bash -c "cd [container_folder] && tar xvf /[backup_directory]/[file_name].tar.gz --strip 1"
+
+
+--DOCKER NETWORK >> create a network inside docker which is make one container can communicate with other container.
+
+1 select a driver that we want to use, usually there is a requirement to use the bridge
+	- bridge >> a driver to create a virtual network and make the container can communicate each other
+	- host >> driver used for make same network as host. but cant use in mac and windows
+	- none >> make the container cant communicate
+
+docker network create --driver [driver_name] [network_name] >> create network
+docker network rm [network_name] >> delete network
+
+docker container create --name [container_name] --network [network_name] [image]:[tag]
+
+docker network disconnect [network_name] [container_name] >> deleting container from network
+
+docker network connect [network_name] [container_name] >> adding container to network
+
+--DOCKER PRUNE >> feature that automatically delete unnesecarry image, containers, and volume, also network.
+All command in docker support prune
+
+docker container prune
+
+docker image prune
+
+docker volume prune
+
+docker network prune
+
+docker system prune
