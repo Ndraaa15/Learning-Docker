@@ -120,3 +120,55 @@ so we can change the user by USER instruction
 
 USER [user] >> change user
 USER [user]:[group] >> change user and group
+
+
+--ARGUMENT INSTRUCTION
+ARG is a instruction that used for define a variable that can used by user for sent a value when we build the image using command --build-argument
+docker built -t [image-name] --build-arg [key]=[value] [folder-dockerfile]
+ARG only used when we build the image, not when we run the container. When we run the container ARG will not used, differenntly with ENV which is used inside docker container
+to access ARG variable, we can use ${NAMA_ARG}
+
+ARG key >> define ARG
+ARG key=value >> define ARG with default value
+
+ARG ONLY USED WHEN BUILD IMAGE, NOT WHEN RUN CONTAINER
+
+--HEALTHCHECK INSTRUCTION
+this instruction is for checking the health of the container, is it still running or not.
+if the image contains healthcheck, the container will be had health status, and from start by default the health status is starting, and if success the health status is healthy
+if the container failed to running the health status is unhealthy
+
+HEALTHCHECK NONE --> disable healthcheck
+HEALTHCHECK [OPTIONS] CMD command (checking health based on CMD command)
+OPTIONS:
+  --interval=DURATION (default: 30s)
+  --timeout=DURATION (default: 30s)
+  --start-period=DURATION (default: 0s)
+  --retries=N (default: 3)
+
+
+  --ENTRYPOINT INSTRUCTION
+  this instruction is to define the executable file which run by container
+  usually ENTRYPOINT is close to CMD instruction, but the different is ENTRYPOINT is not override by command line argument when we run the container
+  when we create CMD instruction without executable file, automatically CMD will use ENTRYPOINT
+
+  ENTRYPOINT [executable, param1, param2]
+  ENTRYPOINT executable param1 param2
+
+  when we use CMD [param1, param2] then that param will sent into ENTRYPOINT
+
+
+  --MULTISTAGE BUILD
+  when we create docker image from based image that larger, thats make the image we create also getting bigger
+  
+  if we use multistage build, then we can use FROM instruction more than one
+  when we use GO language, actually golang can create a binary file that we dont need image golang again
+
+  we can just compile in our device and the binary file we can save in the image, and just use alpine base linux
+  but in golang we recommend to compile the file binary in same opeartion system.
+
+  in docker we have a feature called multistage build
+  we can create several build stage.
+  every FROM instruction is a build stage
+  the last build stage is build stage that we use to create docker image
+  its mean we can use docker build stage to compile our golang code and then we can use another build stage to create docker image
