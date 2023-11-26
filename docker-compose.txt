@@ -1,0 +1,35 @@
+DOCKER COMPOSE
+
+docker compose is a tool to define and running multiple docker container at once.
+with using docker compose we can use file .YAML to config the docker container
+also with the command, we can create all the docker container and running from the config file
+and then we dont need to type docker create again when we want to create container
+
+-multiple isolated environment inside one docker host/server. Its mean we can create several environment for dockre compose
+by default project name will using the folder name of config
+
+-only make the container change, docker compose can detect which container to create and not re-create from file change in config
+
+WHEN WE USING DOCKER COMPOSE
+- create development environment. When we develop app, we also need different tool for each project. We can use docker compose to set up
+- automated testing. often we create automation testing, when there was a lot thing to run manually. we can use docker compose to set up the environment
+- deployement. docker compose can be use to deploy our application, so we dont need to start manually our application, just use docker compose
+
+
+CHECK DOCKER COMPOSE
+we can just docker compose version to check if docker compose is installed
+
+FILE CONFIG
+file config of docker compose is using .YAML file
+yaml file is like json file but more simple and easy to read
+usually file config of docker compose is named docker-compose.yaml
+by default the name of project is the root folder name of the config file
+
+YAML
+file type to save configuration
+yaml has attribute and value
+
+
+DOCKER CONTAINER
+we can create docker container which just add at service in docker compose file, at that service we can add the configuration of the container
+in this services we can define the name of contaienr, image, and anything else
