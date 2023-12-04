@@ -72,6 +72,7 @@ we can use # to comment in yaml file and it will be ignore by docker compose.
 we can use port forwarding in docker compose, we can add port in the service configuration (every container)
 attribute for port including array of object port
 - Short Syntax -> portHOST : portCONTAINER -> portHOST is the port in our machine, portCONTAINER is the port in container -> 8000:80
+- Long Syntax we can add many attribute like target, published, and protocol
 
 --ENVIRONMENT VARIABLE IN COMPOSE
 we can use environment variable in docker compose, we can add environment variable (attribute) in the service configuration (every container)
@@ -110,4 +111,54 @@ but we can use depends on to create the order
 by default when we create a container and the container is stop, the container will not running again
 we need to start it mannually
 
-but docker compose
+but in docker compose we can force the container to restart the process again, we can use attribute restart in the service configuration
+restart have several option
+- no -> default, not restart the container
+- always -> always restart the container
+- on-failure -> restart the container when the container is stop with error
+- unless-stopped -> restart the container when the container is stop with error or we stop the container
+
+
+--RESOURCE LIMIT IN COMPOSE
+we also can use file configuration docker compose to control the resource limit for CPU and Memory for every container that we create
+in resource attribute we can choose for the limit and reservations
+
+reservations is a resource that guaranteed to be available for container
+limit is max limit for resource that given to container but the resource can taken by other container
+
+
+--DOCKERFILE IN COMPOSE
+we can also create our customize image using dockerfile and running using docker-compose
+we can use build attribute in the service configuration to build the image from dockerfile
+- context attribute to define the location of dockerfile
+- dockerfile attribute to define the name of dockerfile
+- args attribute to define the argument that we want to use in dockerfile
+
+by default docker compose will create the image with name projectname_servicename
+we can change the name of the image using image attribute in the service configuration
+
+when we use docker compose start or create the compose will be automated build the image from dockerfile (also the container)
+we can use command docker compose build to only build the image first
+
+to deleting the image from docker compose will not be same as deleting the container and compose
+so we need to delete the image manually (also for volume)
+
+
+--HEALTHCHECK IN COMPOSE
+by default container that we make in manual way and in compose way always use health check  in dockerfile
+but, if we want to change the health check we can use healthcheck attribute in the service configuration
+healthcheck have several option
+- test -> to define the command that will be use to check the health of container
+- interval -> to define the interval of health check
+- timeout -> to define the timeout of health check
+- retries -> to define the retries of health check
+- start_period -> to define the start period of health check
+
+quiet same when we create healtcheck in dockerfile
+
+--EXTEND SERVICE IN COMPOSE
+docker compose have feature extend service that can merge several service in one service
+and than, we can create general config file and special for every type of environment
+after running docker compose, we can use command -f namefile.yaml to use filename thats not docker-compose file
+
+docker compose -f docker-compose.yaml -f docker-compose.dev.yaml create -> to create docker compose with 2 file config (extend)

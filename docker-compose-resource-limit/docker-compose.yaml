@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: on-failure
+    ports:
+      - published: 80
+        target: 80
+        protocol: tcp
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 100M
+        reservations:
+          cpus: '0.25'
+          memory: 50M
