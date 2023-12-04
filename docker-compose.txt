@@ -30,6 +30,84 @@ file type to save configuration
 yaml has attribute and value
 
 
-DOCKER CONTAINER
+--DOCKER CONTAINER in DOCKER COMPOSE
 we can create docker container which just add at service in docker compose file, at that service we can add the configuration of the container
 in this services we can define the name of contaienr, image, and anything else
+
+
+--CREATE CONTAINER IN COMPOSE 
+by this command we can create a docker container base on what we create in .yaml (just create not running)
+if the container is already exist, docker compose will not create the container again 
+
+docker container ls -a -> to see if the container is created
+
+--RUNNING CONTAINER IN COMPOSE
+after we create the container we need to run the container
+we can use command "docker container start" or using docker compose "docker compose start"
+
+--SHOW CONTAINER IN COMPOSE
+docker compose ps -> to show the running container that cdreate by docker compose
+docker contaiener ps -> to show all the running container although not created by docker compose
+
+--STOP CONTAINER IN COMPOSE
+docker compose stop -> just stop the container inside the conf file not deleted the container
+
+--DELETE CONTAINER IN COMPOSE 
+docker compose down -> delete the container, network, voluem inside the conf file
+
+--PROJECT NAME
+when we using docker compose the information of conf of docker compose will automatically save in the project
+by default the name of the project is folder name where the file docker-compose.yaml located
+
+docker compose ls -> to see running project
+
+--DOCKER COMPOSE SERVICE
+in docker compose the container is saved inside configuration file called service
+we can add more than one service inside the conf file
+
+--COMMENT IN YAML
+we can use # to comment in yaml file and it will be ignore by docker compose.
+
+--PORT FORWARDING IN COMPOSE
+we can use port forwarding in docker compose, we can add port in the service configuration (every container)
+attribute for port including array of object port
+- Short Syntax -> portHOST : portCONTAINER -> portHOST is the port in our machine, portCONTAINER is the port in container -> 8000:80
+
+--ENVIRONMENT VARIABLE IN COMPOSE
+we can use environment variable in docker compose, we can add environment variable (attribute) in the service configuration (every container)
+
+--BIND MOUNT IN COMPOSE
+we can use bind mount in docker compose, we can add volume (attribute) in the service configuration (every container)
+the function of bind mount is to use connect the folder in our machine to the folder in container
+there was short syntax for bind mount and also long syntax
+
+--VOLUME IN COMPOSE
+docker compose also can use to create a volume, we can add volume (attribute) in the service configuration (every container)
+if we want to use volume we need to create the container that using that volume first
+
+when we using docker compose down the volume will not deleted, we need to delete it manually
+
+docker volume rm [name]
+
+
+--NETWORK IN COMPOSE
+docker compose also can use to create a network, we can add network (attribute) in the service configuration (every container)
+when we not create a spesific network in docker compose, docker compose will create a network for us (project_name_default)
+thats mean all container in the same project (compose.yaml) will be in the same network
+when we using docker compose down the network will not deleted, we need to delete it manually 
+
+same as volume we need to create container to use the network, we can use more than one network
+
+--DEPENDS ON
+when we create a lot container some times one container is depends on other contaienr
+simply we need to create an order to create the container
+
+by default docker container is create togehter in random order
+
+but we can use depends on to create the order
+
+--RESTART POLICY
+by default when we create a container and the container is stop, the container will not running again
+we need to start it mannually
+
+but docker compose

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  nginx1:
+    image: nginx:latest
+    container_name: nginx1
+    ports:
+      - "8080:80"
+  nginx2:
+    image: nginx:latest
+    container_name: nginx2
+    ports:
+      - protocol: tcp
+        published: 8081
+        target: 80
+        
